@@ -1,6 +1,7 @@
 package com.example.sergmoroko.breakout;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.Random;
@@ -9,17 +10,19 @@ import java.util.Random;
  * Created by ssss on 22.07.2016.
  */
 public class Ball extends GameObject {
-    //private Bitmap ballImage;
+
+    private static Bitmap scaledBall = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+            (GameView.getInstance().getResources(), R.drawable.breakout_ball),GameConstants.BALL_SIZE, GameConstants.BALL_SIZE, false);
 
 
-    public Ball(Bitmap img){
+    public Ball(){
 
         x = GameConstants.BALL_X_COORD;
         y = GameConstants.BALL_Y_COORD;
         width = GameConstants.BALL_SIZE;
         height = GameConstants.BALL_SIZE;
         gameObjectArrayList.add(this);
-        this.image = img;
+        this.image = scaledBall;
 
 
         // X movement direction on start
@@ -58,7 +61,7 @@ public class Ball extends GameObject {
             }
         }
         // Changes a vertical movement direction after collision with a top, or paddle
-        if( getY() <= 0 && dy < 0  || getX() + GameConstants.BALL_SIZE >= paddleX && getX()
+        if( getY() <= GameConstants.PANEL_HEIGHT && dy < 0  || getX() + GameConstants.BALL_SIZE >= paddleX && getX()
                 <= paddleX + GameConstants.PADDLE_WIDTH && getY() + GameConstants.BALL_SIZE == GameConstants.PADDLE_Y_COORD)
 
         {

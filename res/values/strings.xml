@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Breakout</string>
+    <string name="title_activity_pause">PauseActivity</string>
+    <string name="dialog_title">PAUSED</string>
 </resources>

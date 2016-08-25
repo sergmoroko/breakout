@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="@drawable/pause_dialog_bg">
+
+
+    <TextView
+        android:text="PAUSED"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+
+
+        />
+
+
+    <!--<Button-->
+        <!--android:id="@+id/dialogButtonResume"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="RESUME"-->
+
+
+        <!--android:layout_below="@+id/image"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:background="@drawable/button_color_selector"-->
+        <!--android:drawableLeft="@drawable/ic_done_white_48dp"-->
+
+        <!--android:textSize="20dp" />-->
+    <!--<Button-->
+        <!--android:id="@+id/dialogButtonRestart"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:drawableLeft="@drawable/ic_autorenew_white_48dp"-->
+
+        <!--android:text="RESTART"-->
+        <!--android:textSize="20dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_below="@+id/image"-->
+
+        <!--android:background="@drawable/button_color_selector"-->
+
+
+        <!--android:layout_gravity="center_horizontal" />-->
+    <!--<Button-->
+        <!--android:id="@+id/dialogButtonExit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="EXIT"-->
+        <!--android:textSize="20dp"-->
+        <!--android:drawableLeft="@drawable/ic_close_white_48dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:background="@drawable/button_color_selector"-->
+        <!--/>-->
+
+     <FrameLayout
+        style="?android:attr/buttonStyle"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_color_selector"
+        android:layout_marginTop="5dp"
+        android:id="@+id/resume_fake_button">
+
+
+        <TextView
+            style="?android:attr/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:drawableLeft="@drawable/ic_done_white_48dp"
+            android:focusable="false"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            android:text="RESUME" />
+    </FrameLayout>
+    <FrameLayout
+        style="?android:attr/buttonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_color_selector"
+        android:layout_marginTop="5dp"
+        android:id="@+id/restart_fake_button">
+
+        <TextView
+            style="?android:attr/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:drawableLeft="@drawable/ic_autorenew_white_48dp"
+            android:focusable="false"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            android:text="RESTART" />
+    </FrameLayout>
+
+    <FrameLayout
+        style="?android:attr/buttonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_color_selector"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            style="?android:attr/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:drawableLeft="@drawable/ic_close_white_48dp"
+            android:focusable="false"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            android:text="EXIT" />
+    </FrameLayout>
+
+
+</LinearLayout>

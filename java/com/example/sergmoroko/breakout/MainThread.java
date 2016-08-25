@@ -10,15 +10,21 @@ public class MainThread extends Thread {
 
     //private int FPS = 30;
     private double averageFPS;
-    private SurfaceHolder surfaceHolder;
+    private final SurfaceHolder surfaceHolder;
     private GameView gameView;
     private boolean runFlag;
     public static Canvas canvas;
+
+    private final Object mPauseLock;
+    private boolean mPaused;
 
     public MainThread(SurfaceHolder surfaceHolder, GameView gameView){
         super();
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
+        mPauseLock = new Object();
+        mPaused = false;
+        runFlag = false;
     }
 
     @Override
@@ -60,7 +66,7 @@ public class MainThread extends Thread {
             waitTime = targetTime-timeMillis;
 
             try{
-                this.sleep(waitTime);
+                sleep(waitTime);
             }catch(Exception e){}
 
             totalTime += System.nanoTime()-startTime;
@@ -72,10 +78,40 @@ public class MainThread extends Thread {
                 totalTime = 0;
                 System.out.println(averageFPS);
             }
+
+            synchronized (mPauseLock) {
+                while (mPaused) {
+                    try {
+                        mPauseLock.wait();
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
         }
     }
     public void setRunning(boolean b)
     {
         runFlag=b;
     }
+
+    public void pauseThread(){
+        synchronized (mPauseLock) {
+            mPaused = true;
+        }
+    }
+
+    public void resumeThread(){
+
+        synchronized (mPauseLock) {
+            mPaused = false;
+            mPauseLock.notifyAll();
+        }
+    }
+
+    public void restartThread(){
+        interrupt();
+
+    }
+
+
 }

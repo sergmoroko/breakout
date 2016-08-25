@@ -19,7 +19,6 @@ public abstract class GameObject {
     protected Bitmap image;
 
     protected static ArrayList<GameObject> gameObjectArrayList = new ArrayList<>();
-    protected  ArrayList<GameObject> collGameObjectArrayList = new ArrayList<>();
 
     public void setX(int x) {
         this.x = x;
@@ -53,6 +52,13 @@ public abstract class GameObject {
         this.dy = dy;
     }
 
+    public int getDx() {
+        return dx;
+    }
+
+    public void setDx(int dx) {
+        this.dx = dx;
+    }
 
 
     public Rect getRectangle() {
@@ -64,12 +70,6 @@ public abstract class GameObject {
     }
 
 
-    public void removeCollObjects() {
-
-            gameObjectArrayList.removeAll(collGameObjectArrayList);
-            collGameObjectArrayList.clear();
-
-    }
 
     public void remove(){
             gameObjectArrayList.remove(this);
@@ -84,8 +84,6 @@ public abstract class GameObject {
         for (int i = 0; i < gameObjectArrayList.size(); i++) {
             Rect collObjRect = gameObjectArrayList.get(i).getRectangle();
 
-            // TODO: возвращал обьект
-
             if (objRect.intersect(collObjRect) && gameObjectArrayList.get(i) != this) {
                 currentGameObject = gameObjectArrayList.get(i);
                 return currentGameObject;
@@ -93,5 +91,19 @@ public abstract class GameObject {
             }
         }
         return null;
+    }
+
+    public Rect getIntersectionRect(GameObject gameObject){
+
+        return new Rect(
+                Math.max(this.getX(), gameObject.getX()), // left
+                Math.max(this.getY() - this.getHeight(), gameObject.getY() - gameObject.getHeight()), // top
+                Math.min(this.getX() + this.getWidth(), gameObject.getX() + gameObject.getWidth()), // right
+                Math.min(this.getY(), gameObject.getY()) // bottom
+        );
+    }
+
+    public static void removeAll(){
+        gameObjectArrayList.clear();
     }
 }
