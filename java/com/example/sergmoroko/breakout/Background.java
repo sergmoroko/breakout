@@ -12,7 +12,7 @@ public class Background extends GameObject{
         x = 0;
         y = 0;
         this.image = img;
-        gameObjectArrayList.add(this);
+        //gameObjectArrayList.add(this);
     }
 //    public void update(){
 //

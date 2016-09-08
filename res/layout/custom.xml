@@ -114,7 +114,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_color_selector"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:id="@+id/exit_fake_button">
 
         <TextView
             style="?android:attr/buttonStyle"
@@ -132,6 +133,31 @@
             android:textColor="#FFFFFF"
             android:text="EXIT" />
     </FrameLayout>
+
+    <!--<FrameLayout-->
+        <!--style="?android:attr/buttonStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/button_color_selector"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:id="@+id/test_button1">-->
+
+        <!--<TextView-->
+            <!--style="?android:attr/buttonStyle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@null"-->
+            <!--android:clickable="false"-->
+            <!--android:drawableLeft="@drawable/ic_close_white_48dp"-->
+            <!--android:focusable="false"-->
+            <!--android:gravity="center"-->
+            <!--android:minHeight="0dp"-->
+            <!--android:minWidth="0dp"-->
+            <!--android:textSize="20dp"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:text="TEST1" />-->
+    <!--</FrameLayout>-->
 
 
 </LinearLayout>

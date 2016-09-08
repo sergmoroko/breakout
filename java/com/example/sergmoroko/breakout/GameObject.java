@@ -1,11 +1,9 @@
 package com.example.sergmoroko.breakout;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
-
 import java.util.ArrayList;
 
 /**
@@ -19,7 +17,6 @@ public abstract class GameObject {
     protected int width;
     protected int height;
     protected Bitmap image;
-
     protected static ArrayList<GameObject> gameObjectArrayList = new ArrayList<>();
 
     public void setX(int x) {
@@ -71,20 +68,23 @@ public abstract class GameObject {
         canvas.drawBitmap(image, x, y, null);
     }
 
-    public Point getLeftTopCorner(){
+    public Point getLeftTopCorner() {
         return new Point(x, y);
     }
-    public Point getLeftBottomCorner(){
+
+    public Point getLeftBottomCorner() {
         return new Point(x, y + height);
     }
-    public Point getRightTopCorner(){
+
+    public Point getRightTopCorner() {
         return new Point(x + width, y);
     }
-    public Point getRightBottomCorner(){
+
+    public Point getRightBottomCorner() {
         return new Point(x + width, y + height);
     }
 
-    public class Line{
+    public class Line {
 
         Point a;
         Point b;
@@ -92,28 +92,32 @@ public abstract class GameObject {
         double B;
         double C;
 
-        Line(Point a, Point b){
-        this.a = a;
-        this.b = b;
+        Line(Point a, Point b) {
+            this.a = a;
+            this.b = b;
         }
-        public double x1(){
+
+        public double x1() {
             return a.x;
         }
-        public double x2(){
+
+        public double x2() {
             return b.x;
         }
-        public double y1(){
+
+        public double y1() {
             return a.y;
         }
-        public double y2(){
+
+        public double y2() {
             return b.y;
         }
-        public double getLength(){
+
+        public double getLength() {
             return Math.sqrt(((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y)));
         }
 
-        public boolean isIntersects(Line ln){
-
+        private boolean isIntersects(Line ln) {
             double v1 = (x2() - x1()) * (ln.y1() - y1()) - (y2() - y1()) * (ln.x1() - x1());
             double v2 = (x2() - x1()) * (ln.y2() - y1()) - (y2() - y1()) * (ln.x2() - x1());
             double v3 = (ln.x2() - ln.x1()) * (y1() - ln.y1()) - (ln.y2() - ln.y1()) * (x1() - ln.x1());
@@ -121,7 +125,7 @@ public abstract class GameObject {
             return ((v1 * v2 <= 0) && (v3 * v4 <= 0));
         }
 
-        public Point crossingPoint(Line ln){
+        private Point crossingPoint(Line ln) {
             Point crossingPoint = new Point();
             double a1, b1, c1, a2, b2, c2;
             lineEquation(this);
@@ -140,14 +144,20 @@ public abstract class GameObject {
             return crossingPoint;
         }
 
-        private void lineEquation(Line line){
+        private void lineEquation(Line line) {
             A = line.y2() - line.y1();
             B = line.x1() - line.x2();
             C = -line.x1() * (line.y2() - line.y1()) + line.y1() * (line.x2() - line.x1());
         }
     }
 
-    public ArrayList<Line> getObjectLines(GameObject gameObject){
+    public Point getCenter(){
+    int centerX = getRectangle().centerX();
+    int centerY = getRectangle().centerY();
+        return new Point(centerX,centerY);
+    }
+
+    private ArrayList<Line> getObjectSides(GameObject gameObject) {
         ArrayList<Line> objectLinesList = new ArrayList<>();
         objectLinesList.add(new Line(gameObject.getLeftBottomCorner(), gameObject.getLeftTopCorner()));
         objectLinesList.add(new Line(gameObject.getLeftTopCorner(), gameObject.getRightTopCorner()));
@@ -156,7 +166,7 @@ public abstract class GameObject {
         return objectLinesList;
     }
 
-    public ArrayList<Point> getObjectCorners(){
+    private ArrayList<Point> getObjectCorners() {
         ArrayList<Point> objectCornersList = new ArrayList<>();
         objectCornersList.add(getLeftBottomCorner());
         objectCornersList.add(getLeftTopCorner());
@@ -166,39 +176,87 @@ public abstract class GameObject {
     }
 
 
-
-    public void remove(){
-            gameObjectArrayList.remove(this);
+    public void remove() {
+        gameObjectArrayList.remove(this);
     }
 
 
-
     public GameObject getCollidingObject() {
-        Rect objRect = this.getRectangle();
+        ArrayList<Point> objCorners = getObjectCorners();
         GameObject currentGameObject;
+        GameObject resultGameObject = null;
+        double minimalDistance = Double.MAX_VALUE;
 
         for (int i = 0; i < gameObjectArrayList.size(); i++) {
             Rect collObjRect = gameObjectArrayList.get(i).getRectangle();
 
-            if (objRect.intersect(collObjRect) && gameObjectArrayList.get(i) != this) {
-                currentGameObject = gameObjectArrayList.get(i);
-                return currentGameObject;
+            for (Point corner : objCorners) {
+                if (collObjRect.contains(corner.x, corner.y) && gameObjectArrayList.get(i) != this) {
+                    currentGameObject = gameObjectArrayList.get(i);
+                    double distance = new Line(currentGameObject.getCenter(), this.getCenter()).getLength();
+                    if(distance < minimalDistance){
+                        resultGameObject = currentGameObject;
+                    }
 
+                   // return currentGameObject;
+                }
             }
         }
-        return null;
+        return resultGameObject;
     }
 
-    public Line getcollidingSide(GameObject collidingGameObject) {
+//    public GameObject getCollidingObject() {
+//        Rect objRect = this.getRectangle();
+//        GameObject currentGameObject;
+//
+//        for (int i = 0; i < gameObjectArrayList.size(); i++) {
+//            Rect collObjRect = gameObjectArrayList.get(i).getRectangle();
+//
+//            if (objRect.intersect(collObjRect) && gameObjectArrayList.get(i) != this) {
+//                currentGameObject = gameObjectArrayList.get(i);
+//                return currentGameObject;
+//
+//            }
+//        }
+//        return null;
+//    }
+    public void moveToPointByCorner(Point point, Point corner){
+        int y = corner.y;
+        int x = corner.x;
+        //top
+        if(y == this.getY()){
+            if(x == this.getX()){
+                this.setX(point.x);
+                this.setY(point.y);
+            }
+            else {
+                this.setX(point.x - this.getWidth());
+                this.setY(point.y);
+            }
+        }
+        else {
+            if (x == this.getX()) {
+                this.setX(point.x);
+                this.setY(point.y - this.getHeight());
+            } else {
+                this.setX(point.x - this.getWidth());
+                this.setY(point.y - this.getHeight());
+            }
+        }
+    }
 
+
+    public Line getCollidingSide(GameObject collidingGameObject) {
         // variable used to store minimal distance
         double minDistance = Double.MAX_VALUE;
+        Point xPoint = null;
+        Point corner = null;
         // result line
         Line resultLine = null;
         // list with a corners of current object
         ArrayList<Point> objectCorners = getObjectCorners();
         // list containing sides of colliding object rectangle
-        ArrayList<Line> objectSideLines = getObjectLines(collidingGameObject);
+        ArrayList<Line> objectSideLines = getObjectSides(collidingGameObject);
         // for every corner point of current object
         for (Point pt : objectCorners) {
             // previous coordinate of current corner point
@@ -221,25 +279,20 @@ public abstract class GameObject {
                         minDistance = trajectoryLength;
                         // and setting this side of rectangle to result line
                         resultLine = ln;
+                        xPoint = crossingPoint;
+                        corner = pt;
+
                     }
                 }
             }
         }
-
+//        if(xPoint != null && resultLine != null) {
+//            this.moveToPointByCorner(xPoint, corner);
+//        }
         return resultLine;
     }
 
-    public Rect getIntersectionRect(GameObject gameObject){
-
-        return new Rect(
-                Math.max(this.getX(), gameObject.getX()), // left
-                Math.max(this.getY() - this.getHeight(), gameObject.getY() - gameObject.getHeight()), // top
-                Math.min(this.getX() + this.getWidth(), gameObject.getX() + gameObject.getWidth()), // right
-                Math.min(this.getY(), gameObject.getY()) // bottom
-        );
-    }
-
-    public static void removeAll(){
+    public static void removeAll() {
         gameObjectArrayList.clear();
     }
 }

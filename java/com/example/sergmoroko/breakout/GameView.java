@@ -2,27 +2,13 @@ package com.example.sergmoroko.breakout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 
 /**
@@ -41,33 +27,32 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private int paddleCenterX;
 
     private boolean gameStarted;
-
-    private GameObject collGameobject;
-
-
-    private int livesQty = 0;
+    private Context mContext = getContext();
+    int levelch;
 
 
     // Scaled it, because in emulator, size of drawen object is way bigger than original bitmap
 
     private Bitmap scaledPaddle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-            (getResources(), R.drawable.breakout_paddle),GameConstants.PADDLE_WIDTH, GameConstants.PADDLE_HEIGHT, false);
+            (getResources(), R.drawable.breakout_paddle_blue),GameConstants.PADDLE_WIDTH, GameConstants.PADDLE_HEIGHT, false);
     private Bitmap scaledBackground = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
             (getResources(), R.drawable.breakout_background),GameConstants.DISPLAY_WIDTH, GameConstants.DISPLAY_HEIGHT, false);
 //    private Bitmap scaledBall = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
 //            (getResources(), R.drawable.breakout_ball),GameConstants.BALL_SIZE, GameConstants.BALL_SIZE, false);
 //    private Bitmap scaledBrick = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
 //            (getResources(), R.drawable.breakout_brick),GameConstants.BRICK_WIDTH, GameConstants.BRICK_HEIGHT, false);
-    private Bitmap scaledHeart = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-            (getResources(), R.drawable.breakout_heart),GameConstants.HEART_SIZE, GameConstants.HEART_SIZE, false);
+//    private Bitmap scaledHeart = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+//            (getResources(), R.drawable.breakout_heart),GameConstants.HEART_SIZE, GameConstants.HEART_SIZE, false);
     private Bitmap scaledGameTopPanel = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
             (getResources(), R.drawable.breakout_top_panel),GameConstants.DISPLAY_WIDTH, GameConstants.PANEL_HEIGHT, false);
 
 
 
 
-    public GameView(Context context) {
+    public GameView(Context context, int level) {
         super(context);
+        levelch = level;
+
 
         gameView = this;
 
@@ -130,62 +115,80 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
         else {
 
-            collGameobject = ball.getCollidingObject();
+            GameObject collGameObject = ball.getCollidingObject();
 
-//            if(collGameobject == gameTopPanel){
-//                ball.setDy(-ball.getDy());
-//                collGameobject = null;
-//            }
+            if (collGameObject != null && collGameObject != ball && collGameObject != bg && collGameObject != gameTopPanel) {
 
-            if (collGameobject != null && collGameobject != paddle && collGameobject != bg && collGameobject != gameTopPanel){
-
-                Rect intersectionRect = ball.getIntersectionRect(collGameobject);
-
-                collGameobject.remove();
-
-                collGameobject = null;
+                GameObject.Line collSide = ball.getCollidingSide(collGameObject);
+                if (collSide != null) {
 
 
-                // Math.abs() were used, because Rect.width() / Rect.height()
-                // does not check for a valid rectangle (i.e. left <= right) so the result may be negative.
-                if (Math.abs(intersectionRect.width()) < Math.abs(intersectionRect.height())) {
-                    // DO HORIZONTAL COLLISION STUFF
-                    ball.setDx(-ball.getDx());
+                    //if (collGameObject == paddle) {
+                        // top or bottom
+                        if (collSide.y1() == collSide.y2()) {
+                            // top
+                            if (collSide.y1() == collGameObject.getY() && ball.getDy() > 0) {
+                                ball.setDy(-ball.getDy());
+                            }
+                            // bottom
+                            if (collSide.y2() != collGameObject.getY() && ball.getDy() < 0) {
+                                ball.setDy(-ball.getDy());
+                            }
+                        }
+                        // left or right
+                        if (collSide.x1() == collSide.x2()) {
+                            // left
+                            if (collSide.x1() == collGameObject.getX() && ball.getDx() > 0) {
+                                ball.setDx(-ball.getDx());
+                            }
+                            // right
+                            if (collSide.x1() != collGameObject.getX() && ball.getDx() < 0) {
+                                ball.setDx(-ball.getDx());
+                            }
+                        }
+                   // }
+
+
+//                    // top or bottom
+//                    if (collSide.y1() == collSide.y2()) {
+//                        ball.setDy(-ball.getDy());
+//                    }
+//
+//                    // right or left side
+//                    if (collSide.x1() == collSide.x2()) {
+//                        ball.setDx(-ball.getDx());
+//                    }
+
+                    if (collGameObject != paddle) {
+                        collGameObject.remove();
+
+                        // Game score
+                        Score.increaseScore();
+                        //  }
+                    }
                 }
-                else {
-                    // DO VERTICAL COLLISION STUFF
-                    ball.setDy(-ball.getDy());
-                }
+                //}
 
-
-
-
-
-                // Game score
-                Score.setScore(Score.getScore() + GameConstants.SCORE_MULTIPLIER);
-                if (livesQty < GameConstants.LIVES_MAX_QTY &&
-                        Score.getScore() % (GameConstants.BRICK_ROWS_QTY * GameConstants.BRICKS_IN_ROW_QTY * GameConstants.SCORE_MULTIPLIER) == 0){
-
-                    new Heart(scaledHeart, livesQty);
-                    livesQty++;
-                }
             }
-            paddle.update(paddleCenterX);
-            ball.update(paddle.getX());
+                paddle.update(paddleCenterX);
+                ball.update(paddle.getX());
 
             // if ball falls down
-            if (ballDown()){
+            if (ballDown()) {
                 // put it on paddle
                 nextTry();
 
             }
+            }
         }
-    }
+
 
 
     @SuppressLint("MissingSuperCall")
     @Override
     public void draw(Canvas canvas){
+
+        bg.draw(canvas);
 
         for(GameObject object: GameObject.gameObjectArrayList){
             object.draw(canvas);
@@ -211,7 +214,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameStarted = false;
         GameObject.removeAll();
         Heart.removeAllHearts();
-        livesQty = 0;
         Score.setScore(0);
         createGameObjects();
     }
@@ -225,7 +227,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         ball.remove();
         paddle.remove();
         Heart.removeHeart();
-        livesQty--;
         ball = new Ball();
         paddle = new Paddle(scaledPaddle);
     }
@@ -247,10 +248,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             for (int j = 0; j < GameConstants.BRICKS_IN_ROW_QTY; j++){
 
 
-                char c = Level.getLevel()[i][j];
-//                new Brick(scaledBrick, i * (GameConstants.BRICK_WIDTH + GameConstants.BRICKS_SEPARATOR) +
-//                        GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_X_OFFSET, j * (GameConstants.BRICK_HEIGHT +
-//                        GameConstants.BRICKS_SEPARATOR) + GameConstants.BRICKS_Y_OFFSET);
+                char c = Level.getLevel(levelch)[i][j];
                 switch (c){
                     case ' ':
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
@@ -276,12 +274,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         for (int i = GameConstants.LIVES_START_QTY; i >= 0; i--){
-            new Heart(scaledHeart, livesQty);
-            livesQty++;
+            new Heart();
         }
     }
 
     public static GameView getInstance(){
         return gameView;
+    }
+
+    public static void stopThread(){
+        thread.stopThread();
+    }
+
+    public void exitGame() {
+        synchronized (getHolder()) {
+            //quit to main menu
+            GameObject.removeAll();
+            Heart.removeAllHearts();
+            Score.setScore(0);
+            thread.stopThread();
+            ((Activity) mContext).finish();
+
+        }
     }
 }

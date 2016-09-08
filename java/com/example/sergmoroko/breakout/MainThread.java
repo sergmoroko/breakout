@@ -108,9 +108,12 @@ public class MainThread extends Thread {
         }
     }
 
-    public void restartThread(){
+    public void stopThread(){
+        synchronized (mPauseLock) {
+            mPaused = false;
+            mPauseLock.notifyAll();
+        }
         interrupt();
-
     }
 
 

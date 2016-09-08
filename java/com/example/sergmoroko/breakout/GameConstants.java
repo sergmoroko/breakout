@@ -25,7 +25,7 @@ public class GameConstants {
     public static final int PADDLE_X_VELOCITY = (int) (DISPLAY_WIDTH/5);
 
     /** BALL */
-    public static final int BALL_SIZE = (int)(PADDLE_WIDTH/4);
+    public static final int BALL_SIZE = (int)(PADDLE_WIDTH/5);
     public static final int BALL_X_COORD = (int)((DISPLAY_WIDTH - BALL_SIZE)/2);
     public static final int BALL_Y_COORD = (int)(PADDLE_Y_COORD - BALL_SIZE);
 
@@ -42,7 +42,7 @@ public class GameConstants {
     public static final int BRICKS_Y_OFFSET = (int) (DISPLAY_HEIGHT * 0.15);
     public static final int BRICKS_SEPARATOR = (int) (DISPLAY_WIDTH * 0.01);
     public static final int BRICK_WIDTH = (DISPLAY_WIDTH - (BRICKS_IN_ROW_QTY + 1) * BRICKS_SEPARATOR) / BRICKS_IN_ROW_QTY;
-    public static final int BRICK_HEIGHT = (int) (DISPLAY_HEIGHT * 0.025);
+    public static final int BRICK_HEIGHT = (int) (DISPLAY_HEIGHT * 0.03);
     public static final int BRICK_X_OFFSET = (int) (DISPLAY_WIDTH -((BRICK_WIDTH * BRICKS_IN_ROW_QTY) +
             (BRICKS_SEPARATOR * (BRICKS_IN_ROW_QTY + 1)))) / 2;
     public static final String BRICK_TYPE_YELLOW = "yellow";

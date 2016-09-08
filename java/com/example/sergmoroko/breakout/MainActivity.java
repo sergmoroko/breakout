@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         FrameLayout game = new FrameLayout(this);
-        GameView gameView = new GameView (this);
+        GameView gameView = new GameView (this, getIntent().getIntExtra("level",1));
 
 
         game.addView(gameView);

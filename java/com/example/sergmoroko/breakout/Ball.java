@@ -12,13 +12,13 @@ import java.util.Random;
 public class Ball extends GameObject {
 
     private static Bitmap scaledBall = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-            (GameView.getInstance().getResources(), R.drawable.breakout_ball),GameConstants.BALL_SIZE, GameConstants.BALL_SIZE, false);
+            (GameView.getInstance().getResources(), R.drawable.breakout_ball_3d),GameConstants.BALL_SIZE, GameConstants.BALL_SIZE, false);
 
 
     public Ball(){
 
         x = GameConstants.BALL_X_COORD;
-        y = GameConstants.BALL_Y_COORD;
+        y = GameConstants.BALL_Y_COORD - 1;
         width = GameConstants.BALL_SIZE;
         height = GameConstants.BALL_SIZE;
         gameObjectArrayList.add(this);
@@ -33,7 +33,7 @@ public class Ball extends GameObject {
             dx = -dx;
         }
 
-        dy = rGenStart.nextInt(GameConstants.BALL_MAX_SPEED + 1) + GameConstants.BALL_MIN_SPEED;
+        dy =  - (rGenStart.nextInt(GameConstants.BALL_MAX_SPEED + 1) + GameConstants.BALL_MIN_SPEED);
 
     }
 
@@ -61,8 +61,8 @@ public class Ball extends GameObject {
             }
         }
         // Changes a vertical movement direction after collision with a top, or paddle
-        if( getY() <= GameConstants.PANEL_HEIGHT && dy < 0  || getX() + GameConstants.BALL_SIZE >= paddleX && getX()
-                <= paddleX + GameConstants.PADDLE_WIDTH && getY() + GameConstants.BALL_SIZE == GameConstants.PADDLE_Y_COORD)
+        if( getY() <= GameConstants.PANEL_HEIGHT && dy < 0 )// || getX() + GameConstants.BALL_SIZE >= paddleX && getX()
+               // <= paddleX + GameConstants.PADDLE_WIDTH && getY() + GameConstants.BALL_SIZE == GameConstants.PADDLE_Y_COORD)
 
         {
             dy = -dy;
