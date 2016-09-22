@@ -36,25 +36,33 @@ public class LevelChooseActivity extends Activity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        int choosenLvl = 0;
+        int chosenLvl = 0;
 
         switch (v.getId()){
             case R.id.level_1:
-                choosenLvl = 1;
+                chosenLvl = 1;
                 break;
             case R.id.level_2:
-                choosenLvl = 2;
+                chosenLvl = 2;
                 break;
             case R.id.level_3:
-                choosenLvl = 3;
+                chosenLvl = 3;
                 break;
             case R.id.level_4:
-                choosenLvl = 4;
+                chosenLvl = 4;
                 break;
         }
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("level", choosenLvl);
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("level", chosenLvl);
         this.startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        final ExitConfirmationDialog dialog = new ExitConfirmationDialog(this, R.style.DialogWithoutTitle);
+        dialog.show();
+
     }
 }
 
