@@ -1,25 +1,23 @@
 package com.example.sergmoroko.breakout;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class GameActivity extends Activity implements View.OnClickListener {
 
     static Activity currentActivity;
+    static PauseDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         currentActivity = this;
+        dialog = new PauseDialog(this, R.style.DialogWithoutTitle);
 
         super.onCreate(savedInstanceState);
 
@@ -57,15 +55,42 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!GameView.getInstance().gamePaused()) {
+            GameView.pauseGame();
+        }
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(!dialog.isShowing()){
+            dialog.show();
+        }
+    }
+
+
     @Override
     public void onClick(View v) {
         GameView.pauseGame();
-        final PauseDialog dialog = new PauseDialog(this, R.style.DialogWithoutTitle);
-
         dialog.show();
     }
 
-    public static MainActivity getInstance(){
-    return (MainActivity) currentActivity;
+    @Override
+    public void onBackPressed() {
+        GameView.pauseGame();
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
+    }
+
+    public static GameActivity getInstance(){
+    return (GameActivity) currentActivity;
     }
 }

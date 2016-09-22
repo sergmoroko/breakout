@@ -30,7 +30,7 @@ public class PauseDialog extends Dialog{
         FrameLayout resumeButton = (FrameLayout) findViewById(R.id.resume_fake_button);
         FrameLayout restartButton = (FrameLayout) findViewById(R.id.restart_fake_button);
         FrameLayout exitButton = (FrameLayout) findViewById(R.id.exit_fake_button);
-        //FrameLayout testButton = (FrameLayout) findViewById(R.id.test_button1);
+
         // if button is clicked, close the custom dialog
         resumeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -53,19 +53,12 @@ public class PauseDialog extends Dialog{
             public void onClick(View v) {
 
                 dismiss();
-                GameView.getInstance().exitGame();
+                final ExitConfirmationDialog dialog = new ExitConfirmationDialog(context, R.style.DialogWithoutTitle);
+
+                dialog.show();
+                //GameView.getInstance().exitGame();
             }
         });
-//        testButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                dismiss();
-//                GameView.getInstance().exitGame();
-//                Intent intent = new Intent(v.getContext(), LevelChooseActivity.class);
-//                v.getContext().startActivity(intent);
-//            }
-//        });
 
     }
 

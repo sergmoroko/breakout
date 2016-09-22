@@ -115,6 +115,9 @@ public class MainThread extends Thread {
         }
         interrupt();
     }
+    public boolean isPaused(){
+        return mPaused;
+    }
 
 
 }

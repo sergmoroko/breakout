@@ -6,6 +6,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -29,6 +31,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private boolean gameStarted;
     private Context mContext = getContext();
     int levelch;
+
+    //MediaPlayer mp = MediaPlayer.create(this.getContext(), R.raw.sound56_s);
+    SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+    int brickSoundId = sp.load(this.getContext(), R.raw.sound56_s, 1);
+    int paddleSoundId = sp.load(this.getContext(), R.raw.paddle_sound1, 1);
 
 
     // Scaled it, because in emulator, size of drawen object is way bigger than original bitmap
@@ -70,13 +77,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        // Creating game objects (paddle, bricks, ball...)
-        createGameObjects();
+
 
 
         //we can safely start the game loop
-        thread.setRunning(true);
-        thread.start();
+
+        if (thread.getState() == Thread.State.TERMINATED) {
+        thread = new MainThread(getHolder(), this);
+            thread.setRunning(true);
+            thread.start();
+            thread.pauseThread();
+        }
+        else {
+            // Creating game objects (paddle, bricks, ball...)
+            createGameObjects();
+            thread.setRunning(true);
+            thread.start();
+        }
+
+
     }
 
     @Override
@@ -87,14 +106,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
-        while(retry)
-        {
-            try{thread.setRunning(false);
-                thread.join();
 
-            }catch(InterruptedException e){e.printStackTrace();}
-            retry = false;
-        }
+            while (retry) {
+                try {
+                    thread.setRunning(false);
+                    if(thread.isPaused()){
+                        thread.resumeThread();
+                    }
+                    thread.join();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                retry = false;
+            }
+
     }
 
     @Override
@@ -160,11 +186,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 //                    }
 
                     if (collGameObject != paddle) {
+                        //mp.start();
+                        sp.play(brickSoundId, 1, 1, 0, 0, 1);
                         collGameObject.remove();
 
                         // Game score
                         Score.increaseScore();
                         //  }
+                    }
+                    if(collGameObject == paddle){
+                        sp.play(paddleSoundId, 1, 1, 0, 0, 1);
                     }
                 }
                 //}
@@ -202,7 +233,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public static void pauseGame(){
-        thread.pauseThread();
+        if (!thread.isPaused()) {
+            thread.pauseThread();
+        }
+    }
+
+    public boolean gamePaused(){
+        return thread.isPaused();
     }
 
     public static void resumeGame(){
