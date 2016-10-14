@@ -5,9 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
-/**
- * Created by ssss on 15.08.2016.
- */
+
 public class Score{
 
     private static int score = 0;
@@ -26,9 +24,10 @@ public class Score{
     public static void increaseScore(){
         setScore(getScore() + GameConstants.SCORE_MULTIPLIER);
         if (Heart.getLivesQty() < GameConstants.LIVES_MAX_QTY &&
-                getScore() % (GameConstants.BRICK_ROWS_QTY * GameConstants.BRICKS_IN_ROW_QTY * GameConstants.SCORE_MULTIPLIER) == 0) {
+                getScore() % (GameConstants.BONUS_HEART_SCORE) == 0) {
 
             new Heart();
+            GameView.getInstance().increaseLivesQty();
         }
     }
 

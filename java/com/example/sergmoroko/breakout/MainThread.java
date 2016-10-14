@@ -3,13 +3,8 @@ package com.example.sergmoroko.breakout;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-/**
- * Created by ssss on 19.07.2016.
- */
 public class MainThread extends Thread {
 
-    //private int FPS = 30;
-    private double averageFPS;
     private final SurfaceHolder surfaceHolder;
     private GameView gameView;
     private boolean runFlag;
@@ -18,7 +13,7 @@ public class MainThread extends Thread {
     private final Object mPauseLock;
     private boolean mPaused;
 
-    public MainThread(SurfaceHolder surfaceHolder, GameView gameView){
+    public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
         super();
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
@@ -32,15 +27,13 @@ public class MainThread extends Thread {
         long startTime;
         long timeMillis;
         long waitTime;
-        long totalTime = 0;
-        int frameCount =0;
-        long targetTime = 1000/GameConstants.FPS;
 
-        while(runFlag) {
+        long targetTime = 1000 / GameConstants.FPS;
+
+        while (runFlag) {
             startTime = System.nanoTime();
             canvas = null;
 
-            //try locking the canvas for pixel editing
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
@@ -48,36 +41,32 @@ public class MainThread extends Thread {
                     this.gameView.draw(canvas);
                 }
             } catch (Exception e) {
-            }
-            finally{
-                if(canvas!=null)
-                {
+            } finally {
+                if (canvas != null) {
                     try {
                         surfaceHolder.unlockCanvasAndPost(canvas);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    catch(Exception e){e.printStackTrace();}
                 }
             }
 
+            timeMillis = (System.nanoTime() - startTime) / GameConstants.SECONDS_DIVIDER;
 
+            waitTime = targetTime - timeMillis;
 
+            try {
+                if (waitTime > 0) {
+                    sleep(waitTime);
+                }
+                else{
+                    sleep(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
 
-            timeMillis = (System.nanoTime() - startTime) / 1000000;
-            waitTime = targetTime-timeMillis;
-
-            try{
-                sleep(waitTime);
-            }catch(Exception e){}
-
-            totalTime += System.nanoTime()-startTime;
-            frameCount++;
-            if(frameCount == GameConstants.FPS)
-            {
-                averageFPS = 1000/((totalTime/frameCount)/1000000);
-                frameCount =0;
-                totalTime = 0;
-                System.out.println(averageFPS);
             }
+
 
             synchronized (mPauseLock) {
                 while (mPaused) {
@@ -89,18 +78,18 @@ public class MainThread extends Thread {
             }
         }
     }
-    public void setRunning(boolean b)
-    {
-        runFlag=b;
+
+    public void setRunning(boolean b) {
+        runFlag = b;
     }
 
-    public void pauseThread(){
+    public void pauseThread() {
         synchronized (mPauseLock) {
             mPaused = true;
         }
     }
 
-    public void resumeThread(){
+    public void resumeThread() {
 
         synchronized (mPauseLock) {
             mPaused = false;
@@ -108,16 +97,16 @@ public class MainThread extends Thread {
         }
     }
 
-    public void stopThread(){
+    public void stopThread() {
         synchronized (mPauseLock) {
             mPaused = false;
             mPauseLock.notifyAll();
         }
         interrupt();
     }
-    public boolean isPaused(){
+
+    public boolean isPaused() {
         return mPaused;
     }
-
 
 }

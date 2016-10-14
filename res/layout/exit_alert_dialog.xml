@@ -9,8 +9,8 @@
 
     <TextView
         android:text="EXIT?"
-        android:textSize="30dp"
-        android:textAlignment="center"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
@@ -80,7 +80,7 @@
             android:gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:text="YES" />
     </FrameLayout>
@@ -105,7 +105,7 @@
             android:gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textColor="#FFFFFF"
             android:text="NO" />
     </FrameLayout>

@@ -13,11 +13,31 @@
         <!--android:drawableTop="@drawable/ic_pause_white_36dp"-->
         <!---->
         <!--android:id="@+id/pause_button"/>-->
-    <ImageButton
+    <!--<ImageButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/ic_pause_white_36dp"-->
+        <!--android:scaleType="fitCenter"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:id="@+id/pause_button1"/>-->
+
+    <FrameLayout
+        style="?android:attr/buttonStyle"
+        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_pause_white_36dp"
-        android:id="@+id/pause_button"/>
+        android:background="@drawable/pause_button_selector"
+        android:layout_marginTop="5dp"
+
+        android:id="@+id/pause_button">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_pause_white_48dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+    </FrameLayout>>
         <!--android:background="@drawable/pause_button_background"/>-->
 
 </LinearLayout>

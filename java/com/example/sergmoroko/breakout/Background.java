@@ -1,24 +1,18 @@
 package com.example.sergmoroko.breakout;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.BitmapFactory;
 
-/**
- * Created by ssss on 19.07.2016.
- */
-public class Background extends GameObject{
 
-    public Background(Bitmap img){
+public class Background extends GameObject {
+
+    private Bitmap scaledBackground = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+            (GameView.getInstance().getResources(), R.drawable.breakout_background),
+            GameConstants.DISPLAY_WIDTH, GameConstants.DISPLAY_HEIGHT, false);
+
+    public Background() {
         x = 0;
         y = 0;
-        this.image = img;
-        //gameObjectArrayList.add(this);
+        this.image = scaledBackground;
     }
-//    public void update(){
-//
-//    }
-//    public void draw(Canvas canvas){
-//
-//    canvas.drawBitmap(backgroundImage, x, y, null);
-//    }
 }

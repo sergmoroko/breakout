@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 
-/**
- * Created by ssss on 13.09.2016.
- */
+
 public class ExitConfirmationDialog extends Dialog {
     public ExitConfirmationDialog(final Context context, int themeResId) {
         super(context, themeResId);
@@ -32,12 +30,14 @@ public class ExitConfirmationDialog extends Dialog {
         exitConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
-                if (getOwnerActivity().equals(GameActivity.getInstance())){
+
+                if (getOwnerActivity().equals(GameActivity.getInstance())) {
+                    dismiss();
                     GameView.getInstance().exitGame();
-                }
-                else{
-                    System.exit(1);
+                } else {
+
+                    dismiss();
+                    System.exit(0);
                 }
 
             }
@@ -47,12 +47,27 @@ public class ExitConfirmationDialog extends Dialog {
             @Override
             public void onClick(View v) {
 
-                if (getOwnerActivity().equals(GameActivity.getInstance())){
+                if (getOwnerActivity().equals(GameActivity.getInstance())) {
                     dismiss();
-                    GameActivity.dialog.show();
-                }
-                else{
-                    dismiss();;
+                    int gameState = GameView.getInstance().gameState();
+
+                    switch (gameState) {
+                        case GameConstants.GAME_STATE_LOSE:
+                            final LoseDialog loseDialog = new LoseDialog(context, R.style.DialogWithoutTitle);
+                            loseDialog.show();
+                            break;
+                        case GameConstants.GAME_STATE_WIN:
+                            final WinDialog winDialog = new WinDialog(context, R.style.DialogWithoutTitle);
+                            winDialog.show();
+                            break;
+                        default:
+                            final PauseDialog pauseDialog = new PauseDialog(context, R.style.DialogWithoutTitle);
+                            pauseDialog.show();
+                            break;
+                    }
+
+                } else {
+                    dismiss();
                 }
 
             }

@@ -3,9 +3,7 @@ package com.example.sergmoroko.breakout;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/**
- * Created by ssss on 23.07.2016.
- */
+
 public class Brick extends GameObject {
 
     private static Bitmap yellowBrick = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
@@ -16,6 +14,8 @@ public class Brick extends GameObject {
             (GameView.getInstance().getResources(), R.drawable.breakout_brick_green_3d), GameConstants.BRICK_WIDTH, GameConstants.BRICK_HEIGHT, false);
     private static Bitmap stoneBrick = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
             (GameView.getInstance().getResources(), R.drawable.breakout_brick_stone_3d), GameConstants.BRICK_WIDTH, GameConstants.BRICK_HEIGHT, false);
+    private static Bitmap purpleBrick = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+            (GameView.getInstance().getResources(), R.drawable.breakout_brick_purple_3d), GameConstants.BRICK_WIDTH, GameConstants.BRICK_HEIGHT, false);
 
     public Brick(String brickType, int x, int y) {
         this.x = x;
@@ -29,17 +29,20 @@ public class Brick extends GameObject {
     public static Bitmap brickType(String type) {
         Bitmap brickImg = null;
         switch (type) {
-            case "red":
+            case GameConstants.BRICK_TYPE_RED:
                 brickImg = redBrick;
                 break;
-            case "yellow":
+            case GameConstants.BRICK_TYPE_YELLOW:
                 brickImg = yellowBrick;
                 break;
-            case "green":
+            case GameConstants.BRICK_TYPE_GREEN:
                 brickImg = greenBrick;
                 break;
-            case "stone":
+            case GameConstants.BRICK_TYPE_STONE:
                 brickImg = stoneBrick;
+                break;
+            case GameConstants.BRICK_TYPE_PURPLE:
+                brickImg = purpleBrick;
                 break;
         }
         return brickImg;

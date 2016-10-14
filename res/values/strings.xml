@@ -1,5 +1,34 @@
 <resources>
     <string name="app_name">Breakout</string>
-    <string name="title_activity_pause">PauseActivity</string>
-    <string name="dialog_title">PAUSED</string>
+
+
+
+
+
+
+
+    <!--level choosing activity-->
+    <string name="choose_level_title">CHOOSE LEVEL</string>
+
+    <!--win dialog-->
+    <string name="win_dialog_title">YOU WIN!</string>
+    <string name="win_dialog_next_button_text">NEXT LEVEL</string>
+    <string name="win_dialog_exit_button_text">EXIT</string>
+
+    <!--lose dialog-->
+    <string name="lose_dialog_title">YOU LOSE!</string>
+    <string name="lose_dialog_restart_button_text">TRY AGAIN</string>
+    <string name="lose_dialog_exit_button_text">EXIT</string>
+
+    <!--pause dialog-->
+    <string name="pause_dialog_title">PAUSED</string>
+    <string name="pause_dialog_resume_button_text">RESUME</string>
+    <string name="pause_dialog_restart_button_text">RESTART</string>
+    <string name="pause_dialog_exit_button_text">EXIT</string>
+
+    <!--about app dialog-->
+    <string name="about_app_dialog_title">ABOUT APP</string>
+    <string name="about_app_dialog_author">Created by Serg Moroko \n</string>
+    <string name="about_app_dialog_github_link"><a href="https://github.com/sergmoroko/breakout">Project page on GitHub</a></string>
+
 </resources>

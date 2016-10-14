@@ -1,40 +1,33 @@
 package com.example.sergmoroko.breakout;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-
-/**
- * Created by ssss on 19.07.2016.
- */
-public class Paddle extends GameObject{
-
-    private Bitmap paddleImage;
+import android.graphics.BitmapFactory;
 
 
+public class Paddle extends GameObject {
 
+    private Bitmap scaledPaddle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
+            (GameView.getInstance().getResources(), R.drawable.breakout_paddle_blue),
+            GameConstants.PADDLE_WIDTH, GameConstants.PADDLE_HEIGHT, false);
 
-    public Paddle(Bitmap img){
+    public Paddle() {
 
         dx = GameConstants.PADDLE_X_VELOCITY;
         x = GameConstants.PADDLE_X_COORD;
         y = GameConstants.PADDLE_Y_COORD;
         width = GameConstants.PADDLE_WIDTH;
         height = GameConstants.PADDLE_HEIGHT;
-        this.image = img;
+        this.image = scaledPaddle;
         gameObjectArrayList.add(this);
 
     }
 
-//    public void draw(Canvas canvas){
-//
-//        canvas.drawBitmap(paddleImage, x, y, null);
-//    }
 
     public void update(int x) {
 
         moveToX(x);
 
-        if (getX()  <= 0) {
+        if (getX() <= 0) {
             setX(0);
         }
 
@@ -44,20 +37,19 @@ public class Paddle extends GameObject{
     }
 
     // Slightly movement to passed x-coordinate
-    private void moveToX(int x){
-        if (getX() + dx <= x ){
+    private void moveToX(int x) {
+        // move right
+        if (getX() + dx <= x) {
             setX(getX() + dx);
-
         }
-        if ((getX() - dx >= x)){
+        // move left
+        if ((getX() - dx >= x)) {
             setX(getX() - dx);
         }
 
-
-        if ((getX() < x && x - getX() < dx )|| (getX() > x && getX() - x < dx)){
+        if ((getX() < x && x - getX() < dx) || (getX() > x && getX() - x < dx)) {
             setX(x);
         }
-
     }
 
 }

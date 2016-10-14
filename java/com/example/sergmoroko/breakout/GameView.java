@@ -3,8 +3,6 @@ package com.example.sergmoroko.breakout;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -25,41 +23,39 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Paddle paddle;
     private Ball ball;
     private GameTopPanel gameTopPanel;
+    private int livesQty = GameConstants.LIVES_START_QTY;
+    private int brickQty;
 
     private int paddleCenterX;
 
     private boolean gameStarted;
     private Context mContext = getContext();
     int levelch;
+    private boolean soundOn;
+    private boolean gameLosed;
+    private boolean gameWin;
 
-    //MediaPlayer mp = MediaPlayer.create(this.getContext(), R.raw.sound56_s);
+
+
+
+
     SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+
     int brickSoundId = sp.load(this.getContext(), R.raw.sound56_s, 1);
     int paddleSoundId = sp.load(this.getContext(), R.raw.paddle_sound1, 1);
-
-
-    // Scaled it, because in emulator, size of drawen object is way bigger than original bitmap
-
-    private Bitmap scaledPaddle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-            (getResources(), R.drawable.breakout_paddle_blue),GameConstants.PADDLE_WIDTH, GameConstants.PADDLE_HEIGHT, false);
-    private Bitmap scaledBackground = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-            (getResources(), R.drawable.breakout_background),GameConstants.DISPLAY_WIDTH, GameConstants.DISPLAY_HEIGHT, false);
-//    private Bitmap scaledBall = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-//            (getResources(), R.drawable.breakout_ball),GameConstants.BALL_SIZE, GameConstants.BALL_SIZE, false);
-//    private Bitmap scaledBrick = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-//            (getResources(), R.drawable.breakout_brick),GameConstants.BRICK_WIDTH, GameConstants.BRICK_HEIGHT, false);
-//    private Bitmap scaledHeart = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-//            (getResources(), R.drawable.breakout_heart),GameConstants.HEART_SIZE, GameConstants.HEART_SIZE, false);
-    private Bitmap scaledGameTopPanel = Bitmap.createScaledBitmap(BitmapFactory.decodeResource
-            (getResources(), R.drawable.breakout_top_panel),GameConstants.DISPLAY_WIDTH, GameConstants.PANEL_HEIGHT, false);
+    int loseSound = sp.load(this.getContext(), R.raw.lose_sound, 1);
+    int winSound = sp.load(this.getContext(), R.raw.win_sound, 1);
 
 
 
+    public GameView(Context context, int level, boolean sound) {
 
-    public GameView(Context context, int level) {
+
+
         super(context);
         levelch = level;
 
+        soundOn = sound;
 
         gameView = this;
 
@@ -68,7 +64,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         thread = new MainThread(getHolder(), this);
 
-        //make gamePanel focusable so it can handle events
+        //make gameView focusable so it can handle events
         setFocusable(true);
 
 
@@ -76,9 +72,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-
-
 
         //we can safely start the game loop
 
@@ -95,7 +88,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             thread.start();
         }
 
-
+        Score.setScore(0);
     }
 
     @Override
@@ -120,7 +113,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 }
                 retry = false;
             }
-
     }
 
     @Override
@@ -136,20 +128,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
 
-        if (!gameStarted){
-            paddleCenterX = (GameConstants.DISPLAY_WIDTH/2) - (paddle.getWidth()/2);
-        }
-        else {
+        if (!gameStarted) {
+            paddleCenterX = (GameConstants.DISPLAY_WIDTH / 2) - (paddle.getWidth() / 2);
+        } else {
+            if (!gameWin && !gameLosed) {
 
-            GameObject collGameObject = ball.getCollidingObject();
+//                paddle.update(paddleCenterX);
+//                ball.update();
 
-            if (collGameObject != null && collGameObject != ball && collGameObject != bg && collGameObject != gameTopPanel) {
+                GameObject collGameObject = ball.getCollidingObject();
 
-                GameObject.Line collSide = ball.getCollidingSide(collGameObject);
-                if (collSide != null) {
+                if (collGameObject != null && collGameObject != ball && collGameObject != bg && collGameObject != gameTopPanel) {
 
+                    GameObject.Line collSide = ball.getCollidingSide(collGameObject);
+                    if (collSide != null) {
 
-                    //if (collGameObject == paddle) {
                         // top or bottom
                         if (collSide.y1() == collSide.y2()) {
                             // top
@@ -172,46 +165,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                                 ball.setDx(-ball.getDx());
                             }
                         }
-                   // }
 
 
-//                    // top or bottom
-//                    if (collSide.y1() == collSide.y2()) {
-//                        ball.setDy(-ball.getDy());
-//                    }
-//
-//                    // right or left side
-//                    if (collSide.x1() == collSide.x2()) {
-//                        ball.setDx(-ball.getDx());
-//                    }
-
-                    if (collGameObject != paddle) {
-                        //mp.start();
-                        sp.play(brickSoundId, 1, 1, 0, 0, 1);
-                        collGameObject.remove();
-
-                        // Game score
-                        Score.increaseScore();
-                        //  }
+                        if (collGameObject != paddle) {
+                            onBrickCollision(collGameObject);
+                        }
+                        if (collGameObject == paddle) {
+                            onPaddleCollision();
+                        }
                     }
-                    if(collGameObject == paddle){
-                        sp.play(paddleSoundId, 1, 1, 0, 0, 1);
+
+                    else{
+                        System.out.println("collside = null");
                     }
+
+
                 }
-                //}
 
-            }
                 paddle.update(paddleCenterX);
-                ball.update(paddle.getX());
+                ball.update();
 
-            // if ball falls down
-            if (ballDown()) {
-                // put it on paddle
-                nextTry();
-
-            }
+                // if ball falls down
+                if (ballDown()) {
+                    onBallDown();
+                }
             }
         }
+    }
 
 
 
@@ -244,14 +224,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static void resumeGame(){
         thread.resumeThread();
+
     }
 
     public void restartGame(){
 
         gameStarted = false;
+        gameWin = false;
+        gameLosed = false;
         GameObject.removeAll();
         Heart.removeAllHearts();
         Score.setScore(0);
+        livesQty = GameConstants.LIVES_START_QTY;
+        brickQty = 0;
+        createGameObjects();
+    }
+
+    public void nextLevel(){
+        gameStarted = false;
+        gameWin = false;
+        gameLosed = false;
+        GameObject.removeAll();
+        Heart.removeAllHearts();
+        //Score.setScore();
+        levelch = getNextLevel();
         createGameObjects();
     }
 
@@ -259,22 +255,72 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         return  (ball.getY() >= GameConstants.DISPLAY_HEIGHT - ball.getHeight());
     }
 
+    private void onBallDown() {
+        // put it on paddle
+        if (livesQty > 1) {
+            livesQty--;
+            Heart.removeHeart();
+            nextTry();
+        } else {
+
+            Heart.removeHeart();
+
+            if (soundOn) {
+                sp.play(loseSound, 1, 1, 0, 0, 1);
+            }
+
+            gameLosed = true;
+
+            GameActivity.getInstance().onLose();
+
+        }
+    }
+
+    private void onBrickCollision(GameObject collGameObject){
+        if (soundOn) {
+            sp.play(brickSoundId, 1, 1, 0, 0, 1);
+        }
+        collGameObject.remove();
+
+        // Game score
+        Score.increaseScore();
+        //  }
+        brickQty--;
+        if (brickQty == 0) {
+            gameStarted = false;
+            if (soundOn) {
+                sp.play(winSound, 1, 1, 0, 0, 1);
+            }
+
+            gameWin = true;
+
+            GameActivity.getInstance().onWin();
+        }
+    }
+
+    private void onPaddleCollision(){
+        if (soundOn) {
+            sp.play(paddleSoundId, 1, 1, 0, 0, 1);
+        }
+    }
+
     private void nextTry(){
         gameStarted = false;
         ball.remove();
         paddle.remove();
-        Heart.removeHeart();
+        //Heart.removeHeart();
         ball = new Ball();
-        paddle = new Paddle(scaledPaddle);
+        paddle = new Paddle();
+
     }
 
     private void createGameObjects(){
 
-        bg = new Background(scaledBackground);
+        bg = new Background();
 
-        gameTopPanel = new GameTopPanel(scaledGameTopPanel);
+        gameTopPanel = new GameTopPanel();
 
-        paddle = new Paddle(scaledPaddle);
+        paddle = new Paddle();
 
         ball = new Ball();
 
@@ -293,24 +339,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     case 'y':
                         new Brick(GameConstants.BRICK_TYPE_YELLOW, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
                         break;
                     case 'r':
                         new Brick(GameConstants.BRICK_TYPE_RED, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
                         break;
                     case 'g':
                         new Brick(GameConstants.BRICK_TYPE_GREEN, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
                         break;
                     case 's':
                         new Brick(GameConstants.BRICK_TYPE_STONE, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
+                        break;
+                    case 'p':
+                        new Brick(GameConstants.BRICK_TYPE_PURPLE, x, y);
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
                         break;
                 }
             }
         }
 
-        for (int i = GameConstants.LIVES_START_QTY; i >= 0; i--){
+        for (int i = livesQty; i >= 0; i--){
             new Heart();
         }
     }
@@ -328,10 +383,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             //quit to main menu
             GameObject.removeAll();
             Heart.removeAllHearts();
-            Score.setScore(0);
-            thread.stopThread();
+            stopThread();
             ((Activity) mContext).finish();
 
         }
     }
+
+    private int getNextLevel(){
+        if( levelch != GameConstants.LEVEL_NUMBER){
+            return levelch + 1;
+        }
+        else{
+            return 1;
+        }
+    }
+
+    public void increaseLivesQty(){
+        livesQty++;
+    }
+
+
+    public int gameState(){
+        if(gameLosed){
+            return GameConstants.GAME_STATE_LOSE;
+        }
+        if(gameWin){
+            return GameConstants.GAME_STATE_WIN;
+        }
+        return 0;
+    }
+
 }
