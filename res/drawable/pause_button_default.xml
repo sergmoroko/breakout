@@ -5,5 +5,5 @@
         android:width="100dp"
         android:height="50dp" />
 
-    <solid android:color="#26ffffff" />
+    <solid android:color="@color/pause_button_default" />
 </shape>

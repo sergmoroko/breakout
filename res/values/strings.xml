@@ -1,14 +1,21 @@
 <resources>
+
+    <!--app name-->
     <string name="app_name">Breakout</string>
-
-
-
-
-
-
 
     <!--level choosing activity-->
     <string name="choose_level_title">CHOOSE LEVEL</string>
+    <string name="choose_level_high_score">HIGHSCORE: </string>
+    <string name="choose_level_label_level1">LEVEL 1</string>
+    <string name="choose_level_label_level2">LEVEL 2</string>
+    <string name="choose_level_label_level3">LEVEL 3</string>
+    <string name="choose_level_label_level4">LEVEL 4</string>
+    <string name="choose_level_label_level5">LEVEL 5</string>
+    <string name="choose_level_label_level6">LEVEL 6</string>
+    <string name="choose_level_label_level7">LEVEL 7</string>
+    <string name="choose_level_label_level8">LEVEL 8</string>
+    <string name="choose_level_label_level9">LEVEL 9</string>
+    <string name="choose_level_label_level10">LEVEL 10</string>
 
     <!--win dialog-->
     <string name="win_dialog_title">YOU WIN!</string>
@@ -30,5 +37,10 @@
     <string name="about_app_dialog_title">ABOUT APP</string>
     <string name="about_app_dialog_author">Created by Serg Moroko \n</string>
     <string name="about_app_dialog_github_link"><a href="https://github.com/sergmoroko/breakout">Project page on GitHub</a></string>
+
+    <!--exit confirmation dialog-->
+    <string name="exit_confirmation_dialog_title">EXIT?</string>
+    <string name="exit_confirmation_dialog_confirm_button_text">YES</string>
+    <string name="exit_confirmation_dialog_cancel_button_text">NO</string>
 
 </resources>
