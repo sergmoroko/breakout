@@ -14,8 +14,8 @@
     <color name="level_choose_top_panel">#3333cc</color>
     <color name="splash_screen_background">#ccffff</color>
     <color name="dialog_background">#3e3e3e</color>
-    <color name="dialog_button_pressed_stroke">"#000000"</color>
-    <color name="dialog_button_default_stroke">"#FF404040"</color>
+    <color name="dialog_button_pressed_stroke">#000000</color>
+    <color name="dialog_button_default_stroke">#FF404040</color>
     <color name="level_choose_top_panel_button_pressed">#80FAFAFA</color>
     <color name="level_choose_top_panel_button_default">#26FAFAFA</color>
     <color name="level_choose_top_panel_button_pressed_stroke">#F0F0F0</color>
