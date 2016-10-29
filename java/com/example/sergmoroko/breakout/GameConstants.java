@@ -57,6 +57,17 @@ public class GameConstants {
     public static final String BRICK_TYPE_STONE = "stone";
     public static final String BRICK_TYPE_PURPLE = "purple";
 
+    // brick identifiers
+
+    public static final char BRICK_TYPE_YELLOW_ID = 'y';
+    public static final char BRICK_TYPE_RED_ID = 'r';
+    public static final char BRICK_TYPE_GREEN_ID = 'g';
+    public static final char BRICK_TYPE_STONE_ID = 's';
+    public static final char BRICK_TYPE_PURPLE_ID = 'p';
+    public static final char BRICK_TYPE_EMPTY_ID = ' ';
+
+
+
     /** LIVES AND SCORE */
 
     public static final int TEXT_SIZE = DISPLAY_HEIGHT / 50;

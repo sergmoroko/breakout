@@ -30,21 +30,21 @@ public class LevelChooseActivity extends Activity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sp = this.getSharedPreferences("MyPref", MODE_PRIVATE);
+        sp = this.getSharedPreferences(GameConstants.SP_NAME, MODE_PRIVATE);
         editor = sp.edit();
 
-        if (sp.contains("sound")) {
-            isSoundEnabled = sp.getBoolean("sound", true);
+        if (sp.contains(GameConstants.SP_SOUND)) {
+            isSoundEnabled = sp.getBoolean(GameConstants.SP_SOUND, true);
         } else {
-            editor.putBoolean("sound", true);
+            editor.putBoolean(GameConstants.SP_SOUND, true);
             editor.commit();
             isSoundEnabled = true;
         }
 
-        if (sp.contains("highScore")) {
-            highScore = sp.getInt("highScore", 0);
+        if (sp.contains(GameConstants.SP_HIGHSCORE)) {
+            highScore = sp.getInt(GameConstants.SP_HIGHSCORE, 0);
         } else {
-            editor.putInt("highScore", 0);
+            editor.putInt(GameConstants.SP_HIGHSCORE, 0);
             editor.commit();
             highScore = 0;
         }

@@ -58,30 +58,30 @@ public class Brick extends GameObject {
 
                 char c = Level.getLevel(lvl)[i][j];
                 switch (c){
-                    case ' ':
+                    case GameConstants.BRICK_TYPE_EMPTY_ID:
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
                         break;
-                    case 'y':
+                    case GameConstants.BRICK_TYPE_YELLOW_ID:
                         new Brick(GameConstants.BRICK_TYPE_YELLOW, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
                         brickQty++;
                         break;
-                    case 'r':
+                    case GameConstants.BRICK_TYPE_RED_ID:
                         new Brick(GameConstants.BRICK_TYPE_RED, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
                         brickQty++;
                         break;
-                    case 'g':
+                    case GameConstants.BRICK_TYPE_GREEN_ID:
                         new Brick(GameConstants.BRICK_TYPE_GREEN, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
                         brickQty++;
                         break;
-                    case 's':
+                    case GameConstants.BRICK_TYPE_STONE_ID:
                         new Brick(GameConstants.BRICK_TYPE_STONE, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
                         brickQty++;
                         break;
-                    case 'p':
+                    case GameConstants.BRICK_TYPE_PURPLE_ID:
                         new Brick(GameConstants.BRICK_TYPE_PURPLE, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
                         brickQty++;
