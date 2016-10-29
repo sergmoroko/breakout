@@ -38,6 +38,12 @@ public class Heart extends GameObject {
         heartQty = 0;
     }
 
+    public static void createHearts(int livesQty){
+        for (int i = livesQty; i >= 0; i--){
+            new Heart();
+        }
+    }
+
     public static int getLivesQty() {
         return heartQty;
     }

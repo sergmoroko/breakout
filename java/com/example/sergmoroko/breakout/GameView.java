@@ -11,9 +11,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 
-/**
- * Created by ssss on 19.07.2016.
- */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public static GameView gameView;
@@ -30,21 +27,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private boolean gameStarted;
     private Context mContext = getContext();
-    int levelch;
+    private int currentLvl;
     private boolean soundOn;
     private boolean gameLosed;
     private boolean gameWin;
 
 
+    // sounds
+    private SoundPool sp = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 
-
-
-    SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-
-    int brickSoundId = sp.load(this.getContext(), R.raw.sound56_s, 1);
-    int paddleSoundId = sp.load(this.getContext(), R.raw.paddle_sound1, 1);
-    int loseSound = sp.load(this.getContext(), R.raw.lose_sound, 1);
-    int winSound = sp.load(this.getContext(), R.raw.win_sound, 1);
+    private int brickSound = sp.load(this.getContext(), R.raw.brick_sound, 1);
+    private int paddleSound = sp.load(this.getContext(), R.raw.paddle_sound, 1);
+    private int loseSound = sp.load(this.getContext(), R.raw.lose_sound, 1);
+    private int winSound = sp.load(this.getContext(), R.raw.win_sound, 1);
+    private int ballDownSound = sp.load(this.getContext(), R.raw.ball_down, 1);
 
 
 
@@ -53,7 +49,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 
         super(context);
-        levelch = level;
+        currentLvl = level;
 
         soundOn = sound;
 
@@ -133,8 +129,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         } else {
             if (!gameWin && !gameLosed) {
 
-//                paddle.update(paddleCenterX);
-//                ball.update();
 
                 GameObject collGameObject = ball.getCollidingObject();
 
@@ -174,12 +168,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                             onPaddleCollision();
                         }
                     }
-
-                    else{
-                        System.out.println("collside = null");
-                    }
-
-
                 }
 
                 paddle.update(paddleCenterX);
@@ -246,8 +234,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         gameLosed = false;
         GameObject.removeAll();
         Heart.removeAllHearts();
-        //Score.setScore();
-        levelch = getNextLevel();
+        currentLvl = getNextLevel();
         createGameObjects();
     }
 
@@ -260,14 +247,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (livesQty > 1) {
             livesQty--;
             Heart.removeHeart();
+            playSound(ballDownSound);
             nextTry();
         } else {
 
             Heart.removeHeart();
 
-            if (soundOn) {
-                sp.play(loseSound, 1, 1, 0, 0, 1);
-            }
+            playSound(loseSound);
 
             gameLosed = true;
 
@@ -277,20 +263,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void onBrickCollision(GameObject collGameObject){
-        if (soundOn) {
-            sp.play(brickSoundId, 1, 1, 0, 0, 1);
-        }
+        playSound(brickSound);
         collGameObject.remove();
 
         // Game score
         Score.increaseScore();
-        //  }
+
         brickQty--;
         if (brickQty == 0) {
             gameStarted = false;
-            if (soundOn) {
-                sp.play(winSound, 1, 1, 0, 0, 1);
-            }
+            playSound(winSound);
 
             gameWin = true;
 
@@ -299,16 +281,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void onPaddleCollision(){
-        if (soundOn) {
-            sp.play(paddleSoundId, 1, 1, 0, 0, 1);
-        }
+        playSound(paddleSound);
     }
 
     private void nextTry(){
         gameStarted = false;
         ball.remove();
         paddle.remove();
-        //Heart.removeHeart();
         ball = new Ball();
         paddle = new Paddle();
 
@@ -324,50 +303,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         ball = new Ball();
 
-        for(int i = 0; i < GameConstants.BRICK_ROWS_QTY; i ++){
-            int y = i * (GameConstants.BRICK_HEIGHT +
-                    GameConstants.BRICKS_SEPARATOR) + GameConstants.BRICKS_Y_OFFSET;
-            int x = GameConstants.BRICKS_SEPARATOR;
-            for (int j = 0; j < GameConstants.BRICKS_IN_ROW_QTY; j++){
+        Brick.placeBricks(currentLvl, brickQty);
 
-
-                char c = Level.getLevel(levelch)[i][j];
-                switch (c){
-                    case ' ':
-                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        break;
-                    case 'y':
-                        new Brick(GameConstants.BRICK_TYPE_YELLOW, x, y);
-                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
-                        break;
-                    case 'r':
-                        new Brick(GameConstants.BRICK_TYPE_RED, x, y);
-                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
-                        break;
-                    case 'g':
-                        new Brick(GameConstants.BRICK_TYPE_GREEN, x, y);
-                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
-                        break;
-                    case 's':
-                        new Brick(GameConstants.BRICK_TYPE_STONE, x, y);
-                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
-                        break;
-                    case 'p':
-                        new Brick(GameConstants.BRICK_TYPE_PURPLE, x, y);
-                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
-                        break;
-                }
-            }
-        }
-
-        for (int i = livesQty; i >= 0; i--){
-            new Heart();
-        }
+        Heart.createHearts(livesQty);
     }
 
     public static GameView getInstance(){
@@ -390,8 +328,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private int getNextLevel(){
-        if( levelch != GameConstants.LEVEL_NUMBER){
-            return levelch + 1;
+        if( currentLvl != GameConstants.LEVEL_NUMBER){
+            return currentLvl + 1;
         }
         else{
             return 1;
@@ -411,6 +349,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             return GameConstants.GAME_STATE_WIN;
         }
         return 0;
+    }
+
+    private void playSound(int sound){
+        if (soundOn) {
+            sp.play(sound, 1, 1, 0, 0, 1);
+        }
     }
 
 }

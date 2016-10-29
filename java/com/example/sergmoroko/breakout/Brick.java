@@ -47,4 +47,47 @@ public class Brick extends GameObject {
         }
         return brickImg;
     }
+
+    public static void placeBricks(int lvl, int brickQty){
+        for(int i = 0; i < GameConstants.BRICK_ROWS_QTY; i ++){
+            int y = i * (GameConstants.BRICK_HEIGHT +
+                    GameConstants.BRICKS_SEPARATOR) + GameConstants.BRICKS_Y_OFFSET;
+            int x = GameConstants.BRICKS_SEPARATOR;
+            for (int j = 0; j < GameConstants.BRICKS_IN_ROW_QTY; j++){
+
+
+                char c = Level.getLevel(lvl)[i][j];
+                switch (c){
+                    case ' ':
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        break;
+                    case 'y':
+                        new Brick(GameConstants.BRICK_TYPE_YELLOW, x, y);
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
+                        break;
+                    case 'r':
+                        new Brick(GameConstants.BRICK_TYPE_RED, x, y);
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
+                        break;
+                    case 'g':
+                        new Brick(GameConstants.BRICK_TYPE_GREEN, x, y);
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
+                        break;
+                    case 's':
+                        new Brick(GameConstants.BRICK_TYPE_STONE, x, y);
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
+                        break;
+                    case 'p':
+                        new Brick(GameConstants.BRICK_TYPE_PURPLE, x, y);
+                        x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
+                        brickQty++;
+                        break;
+                }
+            }
+        }
+    }
 }
