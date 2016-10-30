@@ -48,7 +48,7 @@ public class Brick extends GameObject {
         return brickImg;
     }
 
-    public static void placeBricks(int lvl, int brickQty){
+    public static void placeBricks(int lvl){
         for(int i = 0; i < GameConstants.BRICK_ROWS_QTY; i ++){
             int y = i * (GameConstants.BRICK_HEIGHT +
                     GameConstants.BRICKS_SEPARATOR) + GameConstants.BRICKS_Y_OFFSET;
@@ -64,27 +64,27 @@ public class Brick extends GameObject {
                     case GameConstants.BRICK_TYPE_YELLOW_ID:
                         new Brick(GameConstants.BRICK_TYPE_YELLOW, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
+                        GameView.getInstance().brickQty++;
                         break;
                     case GameConstants.BRICK_TYPE_RED_ID:
                         new Brick(GameConstants.BRICK_TYPE_RED, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
+                        GameView.getInstance().brickQty++;
                         break;
                     case GameConstants.BRICK_TYPE_GREEN_ID:
                         new Brick(GameConstants.BRICK_TYPE_GREEN, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
+                        GameView.getInstance().brickQty++;
                         break;
                     case GameConstants.BRICK_TYPE_STONE_ID:
                         new Brick(GameConstants.BRICK_TYPE_STONE, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
+                        GameView.getInstance().brickQty++;
                         break;
                     case GameConstants.BRICK_TYPE_PURPLE_ID:
                         new Brick(GameConstants.BRICK_TYPE_PURPLE, x, y);
                         x = x + GameConstants.BRICKS_SEPARATOR + GameConstants.BRICK_WIDTH;
-                        brickQty++;
+                        GameView.getInstance().brickQty++;
                         break;
                 }
             }

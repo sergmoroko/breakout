@@ -21,7 +21,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Ball ball;
     private GameTopPanel gameTopPanel;
     private int livesQty = GameConstants.LIVES_START_QTY;
-    private int brickQty;
+
+    int brickQty;
 
     private int paddleCenterX;
 
@@ -303,7 +304,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         ball = new Ball();
 
-        Brick.placeBricks(currentLvl, brickQty);
+        Brick.placeBricks(currentLvl);
+
+        System.out.println(brickQty);
 
         Heart.createHearts(livesQty);
     }
